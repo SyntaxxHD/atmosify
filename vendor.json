@@ -1,0 +1,74 @@
+{
+  "deezy": {
+    "version": "1.3.15",
+    "license": "https://raw.githubusercontent.com/jessielw/DeeZy/1.3.15/LICENSE",
+    "assets": {
+      "windows-x64": {
+        "url": "https://github.com/jessielw/DeeZy/releases/download/1.3.15/deezy-windows-x64.exe.zip",
+        "sha256": "d763a3312e24923cf9bc6802ed49e62172ac0597b43d60bb334d8086fe608be4"
+      },
+      "linux-x64": {
+        "url": "https://github.com/jessielw/DeeZy/releases/download/1.3.15/deezy-linux-x64.zip",
+        "sha256": "27d7985b4cf404bff689257cbcadff476964a6609022492c560ec7045358ea82"
+      }
+    }
+  },
+  "truehdd": {
+    "version": "0.6.2",
+    "license": "https://raw.githubusercontent.com/truehdd/truehdd/0.6.2/LICENSE",
+    "assets": {
+      "windows-x64": {
+        "url": "https://github.com/truehdd/truehdd/releases/download/0.6.2/truehdd-0.6.2-x86_64-pc-windows-msvc.zip",
+        "sha256": "d1c1920d2da8aec42ffe1c6df1d653dd0dc51c77a576df8704c666bf008e156e"
+      },
+      "linux-x64": {
+        "url": "https://github.com/truehdd/truehdd/releases/download/0.6.2/truehdd-0.6.2-x86_64-unknown-linux-gnu.tar.gz",
+        "sha256": "49f341dbed4bcfac8785e0b3216df68cbd1929120f3b2d64f62863ebe6771711"
+      }
+    }
+  },
+  "ffmpeg": {
+    "version": "n9.0.2-36-g6882969ce9 (BtbN LGPL shared build)",
+    "license": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/6882969ce9fd2aa6aa1d0008b2bfe1c838aac11d/COPYING.LGPLv2.1",
+    "assets": {
+      "windows-x64": {
+        "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-26-14-25/ffmpeg-n9.0.2-36-g6882969ce9-win64-lgpl-shared-9.0.zip",
+        "sha256": "6be6e82a5cdc08aa173cf0a7b746682b4f16492d79473dc09d7c41be834e507b"
+      },
+      "linux-x64": {
+        "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-26-14-25/ffmpeg-n9.0.2-36-g6882969ce9-linux64-lgpl-shared-9.0.tar.xz",
+        "sha256": "8096b0afdc92a06dcbddb626d3b76d1acedb6452bfe8dfd0572ba3fb658b8a93"
+      }
+    },
+    "sources": [
+      {
+        "name": "ffmpeg-n9.0.2-36-g6882969ce9-source.tar.gz",
+        "url": "https://github.com/FFmpeg/FFmpeg/archive/6882969ce9fd2aa6aa1d0008b2bfe1c838aac11d.tar.gz"
+      },
+      {
+        "name": "ffmpeg-builds-b4a2b1d7cc-scripts.tar.gz",
+        "url": "https://github.com/BtbN/FFmpeg-Builds/archive/b4a2b1d7cc241786eb8e2b588a7ade40cad48bbd.tar.gz"
+      }
+    ]
+  },
+  "mkvtoolnix": {
+    "version": "103.0",
+    "license": "https://codeberg.org/mbunkus/mkvtoolnix/raw/tag/release-103.0/COPYING",
+    "assets": {
+      "windows-x64": {
+        "url": "https://mkvtoolnix.download/windows/releases/103.0/mkvtoolnix-64-bit-103.0.zip",
+        "sha256": "c860a10c707cb1ee587d1464f6171842f2ada3bb6f031dfff55fec75542f0417"
+      },
+      "linux-x64": {
+        "url": "https://mkvtoolnix.download/appimage/MKVToolNix_GUI-103.0-x86_64.AppImage",
+        "sha256": "fefc571382f090d65b1038ba36383222167d248ff9c9a54f6678aa21182a03ee"
+      }
+    },
+    "sources": [
+      {
+        "name": "mkvtoolnix-103.0.tar.xz",
+        "url": "https://mkvtoolnix.download/sources/mkvtoolnix-103.0.tar.xz"
+      }
+    ]
+  }
+}

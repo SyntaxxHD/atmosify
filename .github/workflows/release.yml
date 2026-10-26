@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: windows-latest
+            target: windows-x64
+            ext: .exe
+          - os: ubuntu-latest
+            target: linux-x64
+            ext: ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Check tag matches package.json version
+        shell: bash
+        run: |
+          version=$(bun -e "console.log(require('./package.json').version)")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+
+      - name: Build standard binary
+        run: bun build --compile --minify src/cli.ts --outfile dist/atmosify-${{ matrix.target }}${{ matrix.ext }}
+
+      - name: Download and pack bundled tools
+        run: bun scripts/fetch-vendor.ts ${{ matrix.target }}
+
+      - name: Build bundled binary
+        run: bun build --compile --minify src/cli-bundled.ts --outfile dist/atmosify-${{ matrix.target }}-bundled${{ matrix.ext }}
+
+      - name: Smoke test
+        shell: bash
+        run: |
+          ./dist/atmosify-${{ matrix.target }}${{ matrix.ext }} --version
+          ./dist/atmosify-${{ matrix.target }}-bundled${{ matrix.ext }} --version
+
+          # Unpacks the bundle and runs the bundled mkvmerge on a file it must reject
+          touch empty.mkv
+          out=$(./dist/atmosify-${{ matrix.target }}-bundled${{ matrix.ext }} --dry-run empty.mkv 2>&1 || true)
+          echo "$out"
+          echo "$out" | grep -q "mkvmerge could not read the file"
+          rm -f dist/atmosify.toml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atmosify-${{ matrix.target }}
+          path: dist/atmosify-*
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: matrix.target == 'linux-x64'
+        with:
+          name: third-party-licenses
+          path: vendor/THIRD_PARTY_LICENSES.txt
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Make Linux binaries executable
+        run: chmod +x artifacts/atmosify-linux-*
+
+      # GPL/LGPL source for the FFmpeg and MKVToolNix builds inside the bundled binaries
+      - name: Download corresponding source
+        run: bun scripts/fetch-sources.ts
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/*
+            sources/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true

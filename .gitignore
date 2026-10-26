@@ -147,3 +147,11 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# atmosify
+vendor/
+atmosify.toml
+*.exe
+
+.bun-cache/
+sources/

@@ -1,0 +1,41 @@
+﻿{
+  "name": "atmosify",
+  "version": "1.0.0",
+  "description": "Batch-convert TrueHD Atmos tracks in MKV files to Dolby Digital Plus Atmos (E-AC-3 JOC) using DeeZy and MKVToolNix",
+  "keywords": [
+    "atmos",
+    "truehd",
+    "eac3",
+    "ddp",
+    "dolby",
+    "mkv",
+    "mkvtoolnix",
+    "deezy",
+    "cli"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SyntaxxHD/atmosify.git"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "build": "bun build --compile --minify src/cli.ts --outfile dist/atmosify",
+    "build:bundled": "bun build --compile --minify src/cli-bundled.ts --outfile dist/atmosify-bundled",
+    "vendor": "bun scripts/fetch-vendor.ts",
+    "sources": "bun scripts/fetch-sources.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.9.10",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "chalk": "5"
+  }
+}
