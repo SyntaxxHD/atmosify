@@ -154,4 +154,3 @@ atmosify.toml
 *.exe
 
 .bun-cache/
-sources/

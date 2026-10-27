@@ -83,12 +83,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
@@ -97,14 +91,8 @@ jobs:
       - name: Make Linux binaries executable
         run: chmod +x artifacts/atmosify-linux-*
 
-      # GPL/LGPL source for the FFmpeg and MKVToolNix builds inside the bundled binaries
-      - name: Download corresponding source
-        run: bun scripts/fetch-sources.ts
-
       - uses: softprops/action-gh-release@v2
         with:
-          files: |
-            artifacts/*
-            sources/*
+          files: artifacts/*
           generate_release_notes: true
           fail_on_unmatched_files: true

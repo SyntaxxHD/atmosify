@@ -22,9 +22,7 @@ Usage: atmosify <file.mkv | folder>... [options]
   --bitrate <n>    DD+ Atmos bitrate in kbps (default from atmosify.toml, 768)
   --pause          Wait for Enter before closing (automatic for drag & drop / Send To)
   -v, --version    Show the version
-  -h, --help       Show this help
-
-Defaults live in atmosify.toml next to the atmosify executable.`
+  -h, --help       Show this help`
 
 interface Result {
   file: string
@@ -254,12 +252,18 @@ export async function run(getEmbedded?: () => Promise<Embedded>): Promise<number
 
   const pause = !!values.pause || ownsConsole()
   try {
+    const { config, path: configPath, created } = await loadConfig()
+
     if (values.help || positionals.length === 0) {
       console.log(USAGE)
+      console.log(
+        created
+          ? `\nCreated ${chalk.bold(configPath)}\nSet the path to dee under [tools] before converting.`
+          : `\nConfig: ${configPath}`
+      )
+
       return positionals.length === 0 && !values.help ? 1 : 0
     }
-
-    const { config, path: configPath, created } = await loadConfig()
 
     if (created) {
       console.log(chalk.dim(`Created default config: ${configPath}`))

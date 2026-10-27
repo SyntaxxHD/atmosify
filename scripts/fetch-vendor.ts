@@ -227,7 +227,8 @@ await packTar(entries, join(root, 'bundle.tar'))
 await Bun.write(
   join(root, 'THIRD_PARTY_LICENSES.txt'),
   `The bundled build of atmosify includes the following third-party software.\n` +
-    `The complete corresponding source code for FFmpeg and MKVToolNix is attached to each release.\n\n` +
+    `The source code of the bundled FFmpeg and MKVToolNix is available on request:\n` +
+    `open an issue at https://github.com/SyntaxxHD/atmosify/issues.\n\n` +
     licenses.join('\n\n')
 )
 

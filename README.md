@@ -110,7 +110,7 @@ bun run build:bundled                  # dist/atmosify-bundled(.exe)
 
 The bundled tool versions and their SHA-256 checksums are pinned in `vendor.json`. The Linux bundle has to be packed on Linux, because it unpacks the MKVToolNix AppImage and collects shared libraries with `ldd`.
 
-Pushing a tag such as `v1.0.0` runs the release workflow. It builds both variants for Windows and Linux and publishes them on the Releases page, together with the license texts and the source code of the bundled FFmpeg and MKVToolNix. The tag must match the `version` in `package.json`.
+Pushing a tag such as `v1.0.0` runs the release workflow. It builds both variants for Windows and Linux and publishes them on the Releases page, together with the third-party license texts. The tag must match the `version` in `package.json`.
 
 ## Credits
 
@@ -119,7 +119,7 @@ Pushing a tag such as `v1.0.0` runs the release workflow. It builds both variant
 - [MKVToolNix](https://mkvtoolnix.download/) by Moritz Bunkus (GPL-2.0)
 - [FFmpeg](https://ffmpeg.org/) (LGPL-2.1, [BtbN](https://github.com/BtbN/FFmpeg-Builds) shared build)
 
-The bundled builds ship these tools as separate, unmodified programs that atmosify runs. atmosify itself stays MIT licensed. Each release includes the third-party licenses as `THIRD_PARTY_LICENSES.txt`, plus the corresponding source code of FFmpeg (with the build scripts used) and MKVToolNix.
+The bundled builds ship these tools as separate, unmodified programs that atmosify runs. atmosify itself stays MIT licensed. Each release includes the third-party licenses as `THIRD_PARTY_LICENSES.txt`. The source code of the bundled FFmpeg and MKVToolNix is available on request: [open an issue](https://github.com/SyntaxxHD/atmosify/issues).
 
 Dolby, Dolby Atmos and Dolby Digital Plus are trademarks of Dolby Laboratories. This project is not affiliated with Dolby.
 
