@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
+import { run } from './util'
 
 export interface Config {
   bitrate: number
@@ -48,14 +49,18 @@ output_suffix = "${DEFAULTS.output_suffix}"
 temp_dir = ""
 
 [tools]
-# Leave empty to find each tool automatically (PATH, or next to the atmosify executable).
+`
+
+const TOOLS_BUNDLED = `# Dolby Encoding Engine: full path to dee.exe
+dee = ""
+`
+
+const TOOLS_STANDARD = `# Full paths to the tools. Empty = find automatically (e.g. on PATH).
+dee = ""       # Dolby Encoding Engine (dee.exe)
 deezy = ""
 mkvmerge = ""
-ffprobe = ""
-
-# Passed on to DeeZy. Leave empty to let DeeZy find them itself.
 ffmpeg = ""
-dee = ""
+ffprobe = ""
 truehdd = ""
 `
 
@@ -66,7 +71,8 @@ export function appDir(): string {
     : dirname(exe)
 }
 
-export async function loadConfig(): Promise<{
+/** The bundled build only lists `dee` in a new config, since it ships every other tool. */
+export async function loadConfig(bundled: boolean): Promise<{
   config: Config
   path: string
   created: boolean
@@ -75,7 +81,7 @@ export async function loadConfig(): Promise<{
   let created = false
 
   if (!existsSync(path)) {
-    await Bun.write(path, TEMPLATE)
+    await Bun.write(path, TEMPLATE + (bundled ? TOOLS_BUNDLED : TOOLS_STANDARD))
     created = true
   }
 
@@ -155,4 +161,32 @@ export function resolveTools(config: Config, embedded?: Embedded): Tools {
     dee: config.tools.dee || undefined,
     truehdd: config.tools.truehdd || embedded?.truehdd
   }
+}
+
+/**
+ * Find the Dolby Encoding Engine the way DeeZy would.
+ */
+export async function findDee(tools: Tools): Promise<string | undefined> {
+  const direct = firstExisting([
+    tools.dee,
+    Bun.which('dee'),
+    join(dirname(tools.deezy), 'apps', 'dee', `dee${EXE}`)
+  ])
+
+  if (direct) {
+    return direct
+  }
+
+  const info = await run([tools.deezy, 'config', 'info'])
+  const deezyConfig = info.stdout.match(/Active config file: (.+)/)?.[1]?.trim()
+
+  if (!deezyConfig || !existsSync(deezyConfig)) {
+    return undefined
+  }
+
+  const parsed = Bun.TOML.parse(await Bun.file(deezyConfig).text()) as {
+    dependencies?: { dee?: string }
+  }
+
+  return firstExisting([parsed.dependencies?.dee])
 }

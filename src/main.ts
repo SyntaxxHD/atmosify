@@ -4,7 +4,7 @@ import { mkdir, rename, rm, rmdir } from 'node:fs/promises'
 import { basename, dirname, extname, join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 import { version } from '../package.json'
-import { loadConfig, resolveTools, type Embedded, type Tools } from './config'
+import { findDee, loadConfig, resolveTools, type Embedded, type Tools } from './config'
 import { encodeTrack } from './encode'
 import { buildMuxCommand, mux, trackName, type NewTrack } from './mux'
 import { languageLabel, DDP_ATMOS, probe, probeAudio, type Track } from './probe'
@@ -252,7 +252,7 @@ export async function run(getEmbedded?: () => Promise<Embedded>): Promise<number
 
   const pause = !!values.pause || ownsConsole()
   try {
-    const { config, path: configPath, created } = await loadConfig()
+    const { config, path: configPath, created } = await loadConfig(!!getEmbedded)
 
     if (values.help || positionals.length === 0) {
       console.log(USAGE)
@@ -290,6 +290,22 @@ export async function run(getEmbedded?: () => Promise<Embedded>): Promise<number
     if (files.length === 0) {
       console.log('No MKV files found.')
       return 1
+    }
+
+    // Fail before any work if DeeZy would not find DEE halfway through the first encode
+    if (!opts.dryRun) {
+      if (config.tools.dee && !existsSync(config.tools.dee)) {
+        throw new Error(`dee not found at ${config.tools.dee} (set in ${configPath})`)
+      }
+
+      const dee = await findDee(tools)
+      if (!dee) {
+        throw new Error(
+          `Dolby Encoding Engine not found. Set the path to dee.exe under [tools] in ${configPath}`
+        )
+      }
+
+      tools.dee = dee
     }
 
     process.on('SIGINT', () => {

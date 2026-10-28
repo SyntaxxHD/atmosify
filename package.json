@@ -1,6 +1,6 @@
 ﻿{
   "name": "atmosify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Batch-convert TrueHD Atmos tracks in MKV files to Dolby Digital Plus Atmos (E-AC-3 JOC) using DeeZy and MKVToolNix",
   "keywords": [
     "atmos",
